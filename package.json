@@ -2,9 +2,14 @@
 	"name": "vsyoui",
 	"displayName": "VSYoui",
 	"description": "You.i CLI for Visual Studio",
+	"publisher": "bcturnerYOUI",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.59.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/bcturnerYOUI/vsyoui-extension.git"
 	},
 	"categories": [
 		"Other"
