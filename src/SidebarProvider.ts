@@ -7,7 +7,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
   constructor(private readonly _extensionUri: vscode.Uri) {}
 
-    public sendCommand(command: string, buildConfig: any) {
+    public sendYouiCommand(command: string, buildConfig: any) {
         let commandStr = "youi-tv ";
         commandStr = commandStr.concat(command);
 
@@ -24,17 +24,21 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             commandStr = commandStr.concat(" -t "+buildConfig.target);
         }
 
-        const terminal = vscode.window.activeTerminal;
-        if(!terminal) {
-            const newTerminal = vscode.window.createTerminal('VSYoui Terminal');
-            newTerminal.show();
-            newTerminal.sendText(commandStr);
-        }
-        else {
-            terminal.show();
-            terminal.sendText(commandStr);
-        }
+        this.sendCommand(commandStr);
     }
+
+    public sendCommand(command: string) {
+      const terminal = vscode.window.activeTerminal;
+      if(!terminal) {
+          const newTerminal = vscode.window.createTerminal('VSYoui Terminal');
+          newTerminal.show();
+          newTerminal.sendText(command);
+      }
+      else {
+          terminal.show();
+          terminal.sendText(command);
+      }
+  }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView;
@@ -50,19 +54,30 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
+        case "onClean": {
+          this.sendCommand("rm -rf build");
+          break;
+        }
         case "onGenerate": {
             if (!data.value) {
               return;
             }
-            this.sendCommand("generate", data.value);
+            this.sendYouiCommand("generate", data.value);
             break;
         }
         case "onBuild": {
             if (!data.value) {
               return;
             }
-            this.sendCommand("build", data.value);
+            this.sendYouiCommand("build", data.value);
             break;
+        }
+        case "onRun": {
+          if (!data.value) {
+            return;
+          }
+          this.sendYouiCommand("run", data.value);
+          break;
         }
         case "onInfo": {
           if (!data.value) {

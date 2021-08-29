@@ -48,7 +48,7 @@
     {/each}
 </select>
 
-<!-- Platform dropdown -->
+<!-- Config Radio -->
 <h3>Config</h3>
 <label>
 	<input checked={config==='debug'} on:change={onConfigChange} type="checkbox" name="config" value="debug" />
@@ -87,6 +87,14 @@
 <h3>Target</h3>
 <input bind:value={target} on:change={updateConfig}/>
 
+<!-- Clean Build Button -->
+<button on:click={() => {
+    tsvscode.postMessage({
+        type: 'onClean',
+        value: null
+    });
+}}>Clean Build</button>
+
 <!-- Generate Button -->
 <button on:click={() => {
     tsvscode.postMessage({
@@ -102,3 +110,11 @@
         value: buildConfig
     });
 }}>Build</button>
+
+<!-- Run Button -->
+<button on:click={() => {
+    tsvscode.postMessage({
+        type: 'onRun',
+        value: buildConfig
+    });
+}}>Run</button>
